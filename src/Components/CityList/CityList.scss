@@ -1,0 +1,15 @@
+.cityList {
+    &__heading {
+        display: flex;
+        align-items: center;
+    }
+    &__list {
+        list-style: none;
+        padding: 0;
+    }
+    &__controls {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+}

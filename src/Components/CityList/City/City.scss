@@ -1,0 +1,28 @@
+.city {
+  &__entry {
+    padding: 10px;
+    background: #fff;
+    border: 2px solid black;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    &__heading {
+      display: flex;
+      align-items: center;
+      h3 {
+        margin: 0;
+      }
+    }
+    &__controls {
+      align-self: center;
+      margin-left: auto;
+    }
+  }
+  &__deleteBtn {
+    height: 40px;
+    width: 40px;
+  }
+  &__editBtn {
+    height: 40px;
+    width: auto;
+  }
+}
