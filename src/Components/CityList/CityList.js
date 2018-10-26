@@ -4,14 +4,18 @@ import "./CityList.scss";
 import City from "./City/City";
 import AddCity from "../AddCity/AddCity";
 
-export default function CityList({ cityTitle, cityWeather }) {
+export default function CityList({ handleCityInput, handleCitySubmit, city }) {
   return (
     <div className="container">
       <div className="cityList__heading">
         <h2>Вы следите за следующими городами</h2>
         <div className="cityList__controls">
           <button>Сортировать</button>
-          <AddCity />
+          <AddCity
+            handleCityInput={handleCityInput}
+            handleCitySubmit={handleCitySubmit}
+            city={city}
+          />
         </div>
       </div>
 
