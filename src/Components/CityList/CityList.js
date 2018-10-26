@@ -4,7 +4,12 @@ import "./CityList.scss";
 import City from "./City/City";
 import AddCity from "../AddCity/AddCity";
 
-export default function CityList({ handleCityInput, handleCitySubmit, city }) {
+export default function CityList({
+  handleCityInput,
+  handleCitySubmit,
+  city,
+  cities
+}) {
   return (
     <div className="container">
       <div className="cityList__heading">
@@ -20,8 +25,15 @@ export default function CityList({ handleCityInput, handleCitySubmit, city }) {
       </div>
 
       <ul className="cityList cityList__list">
-        <City />
-        <City />
+        {cities.map((city, index) => (
+          <City
+            key={index}
+            cityName={city.name}
+            temp={city.main.temp}
+            humidity={city.main.humidity}
+            description={city.weather[0].description}
+          />
+        ))}
       </ul>
     </div>
   );
