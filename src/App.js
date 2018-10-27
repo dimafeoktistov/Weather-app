@@ -4,7 +4,7 @@ import "./App.scss";
 import CityList from "./Components/CityList/CityList";
 import Layout from "./HOCs/Layout/Layout";
 
-const APPID = "fadad01a2acea22e75c4f8700642a258";
+// const APPID = "fadad01a2acea22e75c4f8700642a258";
 
 class App extends Component {
   state = {
@@ -29,17 +29,18 @@ class App extends Component {
 
   handleCitySubmit = event => {
     let city = this.state.query;
+    console.log(city);
 
-    fetch(
-      `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${APPID}&lang=ru&units=metric`
-    )
-      .then(res => res.json())
-      .then(city =>
-        this.setState(prevState => ({
-          query: "",
-          cities: [...prevState.cities, city]
-        }))
-      );
+    // fetch(
+    //   `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${APPID}&lang=ru&units=metric`
+    // )
+    //   .then(res => res.json())
+    //   .then(city =>
+    //     this.setState(prevState => ({
+    //       query: "",
+    //       cities: [...prevState.cities, city]
+    //     }))
+    //   );
 
     event.preventDefault();
   };
