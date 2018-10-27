@@ -10,8 +10,8 @@ import configureStore from "./Store/configureStore";
 const store = configureStore();
 
 ReactDOM.render(
-  <Provider>
-    <App store={store} />
+  <Provider store={store}>
+    <App />
   </Provider>,
   document.getElementById("root")
 );

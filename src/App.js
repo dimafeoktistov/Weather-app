@@ -28,8 +28,8 @@ class App extends Component {
   };
 
   handleCitySubmit = event => {
-    let city = this.state.query;
-    console.log(city);
+    // let city = this.state.query;
+    // console.log(city);
 
     // fetch(
     //   `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${APPID}&lang=ru&units=metric`
@@ -46,7 +46,6 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state);
     return (
       <Layout>
         <CityList
