@@ -12,7 +12,9 @@ import AddCity from "../AddCity/AddCity";
 
 class CityList extends Component {
   componentDidMount() {
-    this.props.fetchData("https://jsonplaceholder.typicode.com/posts");
+    this.props.fetchData(
+      "https://weather-app-af1f8.firebaseio.com/cities.json"
+    );
   }
 
   render() {
@@ -21,29 +23,29 @@ class CityList extends Component {
     }
 
     if (this.props.isLoading) {
-      return <p>Loading…</p>;
+      return <p>Loading</p>;
     }
-
-    console.log(this.state);
 
     return (
       <div>
         <div className="container">
           <div className="cityList__heading">
-            <h2>Вы следите за следующими городами blalabla</h2>
+            <h2>Вы следите за следующими городами</h2>
             <div className="cityList__controls">
               <button onClick={this.props.errorAfterFiveSeconds}>
                 Сортировать
               </button>
-              <AddCity
-                handleCityInput={this.props.handleCityInput}
-                handleCitySubmit={this.props.handleCitySubmit}
-                city={this.props.city}
-              />
+              <AddCity />
             </div>
           </div>
 
-          <ul className="cityList cityList__list" />
+          <ul className="cityList cityList__list">
+            {Object.keys(this.props.cities).map(key => {
+              const city = this.props.cities[key];
+
+              return <li key={city.id}> {city.name}</li>;
+            })}
+          </ul>
         </div>
       </div>
     );
@@ -52,15 +54,16 @@ class CityList extends Component {
 
 const mapStateToProps = state => {
   return {
-    city: state.city,
-    hasErrored: state.cityHasErrored,
-    isLoading: state.cityIsLoading
+    cities: state.cities,
+    hasErrored: state.citiesHasErrored,
+    isLoading: state.citiesIsLoading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: url => dispatch(cityFetchData(url))
+    fetchData: url => dispatch(cityFetchData(url)),
+    errorAfterFiveSeconds: () => dispatch(errorAfterFiveSeconds())
   };
 };
 
@@ -68,12 +71,6 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(CityList);
-
-// {
-//   this.props.city.map(el => (
-//     <li key={el.id}>{el.title}</li>
-//   ))
-// }
 
 // cityName = { city.name }
 // temp = { city.main.temp }

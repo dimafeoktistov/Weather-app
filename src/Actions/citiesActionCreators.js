@@ -1,29 +1,38 @@
 import * as actions from "./actiontypes";
 
-export function cityHasErrored(bool) {
+export function addCity(city) {
+  console.log("dispatched");
   return {
-    type: actions.CITY_HAS_ERRORED,
+    type: actions.ADD_CITY,
+    id: city,
+    payload: { name: city }
+  };
+}
+
+export function citiesHasErrored(bool) {
+  return {
+    type: actions.CITIES_HAS_ERRORED,
     hasErrored: bool
   };
 }
 
-export function cityIsLoading(bool) {
+export function citiesIsLoading(bool) {
   return {
-    type: actions.CITY_IS_LOADING,
+    type: actions.CITIES_IS_LOADING,
     isLoading: bool
   };
 }
 
-export function cityFetchDataSuccess(cityData) {
+export function citiesFetchDataSuccess(cities) {
   return {
-    type: actions.CITY_FETCH_DATA_SUCCESS,
-    cityData
+    type: actions.CITIES_FETCH_DATA_SUCCESS,
+    cities
   };
 }
 
 export function cityFetchData(url) {
   return dispatch => {
-    dispatch(cityIsLoading(true));
+    dispatch(citiesIsLoading(true));
 
     fetch(url)
       .then(response => {
@@ -31,13 +40,13 @@ export function cityFetchData(url) {
           throw Error(response.statusText);
         }
 
-        dispatch(cityIsLoading(false));
+        dispatch(citiesIsLoading(false));
 
         return response;
       })
       .then(response => response.json())
-      .then(cityData => dispatch(cityFetchDataSuccess(cityData)))
-      .catch(() => dispatch(cityHasErrored(true)));
+      .then(cities => dispatch(citiesFetchDataSuccess(cities)))
+      .catch(() => dispatch(citiesHasErrored(true)));
   };
 }
 
@@ -46,7 +55,7 @@ export function errorAfterFiveSeconds() {
   return dispatch => {
     setTimeout(() => {
       // This function is able to dispatch other action creators
-      dispatch(cityHasErrored(true));
+      dispatch(citiesHasErrored(true));
     }, 5000);
   };
 }

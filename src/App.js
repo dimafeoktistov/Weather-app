@@ -7,10 +7,10 @@ import Layout from "./HOCs/Layout/Layout";
 // const APPID = "fadad01a2acea22e75c4f8700642a258";
 
 class App extends Component {
-  state = {
-    query: "",
-    cities: []
-  };
+  // state = {
+  //   query: "",
+  //   cities: []
+  // };
 
   componentDidMount = () => {
     // fetch(
@@ -20,12 +20,12 @@ class App extends Component {
     //   .then(weather => console.log(weather));
   };
 
-  handleCityInput = event => {
-    this.setState({
-      ...this.state,
-      query: event.target.value
-    });
-  };
+  // handleCityInput = event => {
+  //   this.setState({
+  //     ...this.state,
+  //     query: event.target.value
+  //   });
+  // };
 
   handleCitySubmit = event => {
     // let city = this.state.query;
@@ -48,15 +48,15 @@ class App extends Component {
   render() {
     return (
       <Layout>
-        <CityList
-          handleCityInput={this.handleCityInput}
-          handleCitySubmit={this.handleCitySubmit}
-          city={this.state.query}
-          cities={this.state.cities}
-        />
+        <CityList />
       </Layout>
     );
   }
 }
 
 export default App;
+
+// handleCityInput = { this.handleCityInput }
+// handleCitySubmit = { this.handleCitySubmit }
+// city = { this.state.query }
+// cities = { this.state.cities }
