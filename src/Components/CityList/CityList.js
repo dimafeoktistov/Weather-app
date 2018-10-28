@@ -7,14 +7,12 @@ import {
   errorAfterFiveSeconds
 } from "../../Actions/citiesActionCreators";
 
-// import City from "./City/City";
+import City from "./City/City";
 import AddCity from "../AddCity/AddCity";
 
 class CityList extends Component {
   componentDidMount() {
-    this.props.fetchData(
-      "https://weather-app-af1f8.firebaseio.com/cities.json"
-    );
+    this.props.fetchData("cities.json");
   }
 
   render() {
@@ -43,7 +41,7 @@ class CityList extends Component {
             {Object.keys(this.props.cities).map(key => {
               const city = this.props.cities[key];
 
-              return <li key={city.id}> {city.name}</li>;
+              return <City key={key} name={city.name} id={key} />;
             })}
           </ul>
         </div>

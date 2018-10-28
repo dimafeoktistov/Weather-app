@@ -1,5 +1,14 @@
 import * as actions from "../Actions/actiontypes";
 
+const removeProperty = (obj, property) => {
+  return Object.keys(obj).reduce((object, key) => {
+    if (key !== property) {
+      object[key] = obj[key];
+    }
+    return object;
+  }, {});
+};
+
 export function citiesHasErrored(state = false, action) {
   switch (action.type) {
     case actions.CITIES_HAS_ERRORED:
@@ -23,15 +32,17 @@ export function citiesIsLoading(state = false, action) {
 export function cities(state = {}, action) {
   switch (action.type) {
     case actions.CITIES_FETCH_DATA_SUCCESS:
-      console.log("fetch");
       return action.cities;
 
     case actions.ADD_CITY:
-      console.log("cities reducer");
       return {
         ...state,
         [action.id]: action.payload
       };
+
+    case actions.DELETE_CITY:
+      console.log(action.id);
+      return state;
 
     default:
       return state;

@@ -1,7 +1,14 @@
 import * as actions from "./actiontypes";
+import axiosFirebase from "../axios-firebase";
+
+export function deleteCity(id) {
+  return {
+    type: actions.DELETE_CITY,
+    id: id
+  };
+}
 
 export function addCity(city) {
-  console.log("dispatched");
   return {
     type: actions.ADD_CITY,
     id: city,
@@ -34,18 +41,15 @@ export function cityFetchData(url) {
   return dispatch => {
     dispatch(citiesIsLoading(true));
 
-    fetch(url)
+    axiosFirebase
+      .get(url)
       .then(response => {
-        if (!response.ok) {
+        if (response.statusText !== "OK") {
           throw Error(response.statusText);
         }
-
         dispatch(citiesIsLoading(false));
-
-        return response;
+        dispatch(citiesFetchDataSuccess(response.data));
       })
-      .then(response => response.json())
-      .then(cities => dispatch(citiesFetchDataSuccess(cities)))
       .catch(() => dispatch(citiesHasErrored(true)));
   };
 }
