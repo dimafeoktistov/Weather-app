@@ -41,8 +41,18 @@ export function cities(state = {}, action) {
       };
 
     case actions.DELETE_CITY:
-      console.log(action.id);
-      return state;
+      return removeProperty(state, action.id);
+
+    case actions.EDIT_CITY:
+      const updatedCities = Object.keys(state).map(key => {
+        const item = state[key];
+        if (key === action.id) {
+          return { ...item, name: action.payload };
+        }
+
+        return item;
+      });
+      return updatedCities;
 
     default:
       return state;

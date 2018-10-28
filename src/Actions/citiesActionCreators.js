@@ -1,6 +1,14 @@
 import * as actions from "./actiontypes";
 import axiosFirebase from "../axios-firebase";
 
+export function editCity(id, city) {
+  return {
+    type: actions.EDIT_CITY,
+    id,
+    payload: city
+  };
+}
+
 export function deleteCity(id) {
   return {
     type: actions.DELETE_CITY,

@@ -1,9 +1,15 @@
 import React from "react";
 import "./City.scss";
-import { connect } from "react-redux";
-import { deleteCity } from "../../../Actions/citiesActionCreators";
 
-const City = ({ name, temp, humidity, description, id, deleteCity }) => {
+const City = ({
+  name,
+  temp,
+  humidity,
+  description,
+  id,
+  handleCityDelete,
+  handleEditStart
+}) => {
   return (
     <li className="city__entry">
       <div className="city__entry__heading">
@@ -12,11 +18,11 @@ const City = ({ name, temp, humidity, description, id, deleteCity }) => {
           <button
             className="city__deleteBtn"
             id={id}
-            onClick={id => deleteCity(id)}
+            onClick={handleCityDelete}
           >
             X
           </button>
-          <button className="city__editBtn" id={id}>
+          <button className="city__editBtn" id={id} onClick={handleEditStart}>
             редактировать
           </button>
         </div>
@@ -30,13 +36,4 @@ const City = ({ name, temp, humidity, description, id, deleteCity }) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    deleteCity: id => dispatch(deleteCity(id))
-  };
-};
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(City);
+export default City;
