@@ -4,8 +4,6 @@ import "./App.scss";
 import CityList from "./Components/CityList/CityList";
 import Layout from "./HOCs/Layout/Layout";
 
-// const APPID = "fadad01a2acea22e75c4f8700642a258";
-
 class App extends Component {
   // state = {
   //   query: "",

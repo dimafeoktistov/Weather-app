@@ -12,7 +12,7 @@ const removeProperty = (obj, property) => {
 export function citiesHasErrored(state = false, action) {
   switch (action.type) {
     case actions.CITIES_HAS_ERRORED:
-      return { ...state, hasErrored: action.hasErrored };
+      return action.hasErrored;
 
     default:
       return state;
@@ -44,15 +44,10 @@ export function cities(state = {}, action) {
       return removeProperty(state, action.id);
 
     case actions.EDIT_CITY:
-      const updatedCities = Object.keys(state).map(key => {
-        const item = state[key];
-        if (key === action.id) {
-          return { ...item, name: action.payload };
-        }
-
-        return item;
-      });
-      return updatedCities;
+      return {
+        ...state,
+        [action.id]: action.payload
+      };
 
     default:
       return state;

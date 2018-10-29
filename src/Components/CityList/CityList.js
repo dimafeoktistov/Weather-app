@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import "./CityList.scss";
 
+import { axiosFirebase } from "../../axios-instances";
+
 import { connect } from "react-redux";
 import {
-  cityFetchData,
+  citiesFetchData,
   errorAfterFiveSeconds,
   deleteCity,
   editCity
@@ -16,7 +18,9 @@ class CityList extends Component {
   state = {
     cityNameInput: "",
     id: null,
-    isEditing: false
+    isEditing: false,
+    uiLoading: false,
+    uiError: false
   };
 
   componentDidMount() {
@@ -24,7 +28,27 @@ class CityList extends Component {
   }
 
   handleCityDelete = e => {
-    this.props.deleteCity(e.target.id);
+    this.setState({
+      ...this.state,
+      uiLoading: true
+    });
+    const cityId = e.target.id;
+    axiosFirebase
+      .delete(`/cities/${e.target.id}.json`)
+      .then(response => {
+        this.props.deleteCity(cityId);
+        this.setState({
+          ...this.state,
+          uiLoading: false
+        });
+        console.log(response);
+      })
+      .catch(err => {
+        this.setState({
+          ...this.state,
+          uiError: true
+        });
+      });
   };
 
   handleCityChange = e => {
@@ -36,29 +60,83 @@ class CityList extends Component {
 
   handleEditSubmit = e => {
     e.preventDefault();
-    this.props.editCity(this.state.id, this.state.cityNameInput);
-    this.setState({
-      ...this.state,
-      cityNameInput: "",
-      isEditing: !this.state.isEditing
+    this.setState({ ...this.state, uiLoading: true });
+
+    //посылаем запрос к базе на изменение данных
+    const data = { name: this.state.cityNameInput };
+    const city = data;
+    axiosFirebase
+      .put(`/cities/${this.state.id}.json`, data)
+      .then(res => {
+        this.setState({ ...this.state, uiLoading: false });
+        this.props.editCity(this.state.id, city);
+        console.log(res);
+      })
+      .catch(err => console.log(err));
+
+    // отправка действия в редакс для изменения города
+
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        cityNameInput: "",
+        isEditing: !prevState.isEditing
+      };
     });
   };
 
   handleEditStart = e => {
-    this.setState({
-      ...this.state,
-      id: e.target.id,
-      isEditing: !this.state.isEditing
+    const id = e.target.id;
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        id,
+        isEditing: !prevState.isEditing
+      };
     });
   };
 
   render() {
+    const loader = <p>Загрузка данных</p>;
+    const errorMessage = <p> При запросе к серверу произошла ошибка. </p>;
+    let citiesList;
+
+    if (
+      this.props.cities === null ||
+      (Object.keys(this.props.cities).length === 0 &&
+        this.props.cities.constructor === Object)
+    ) {
+      citiesList = <p>Вы не добавили ни одного города</p>;
+    } else {
+      citiesList = (
+        <ul className="cityList cityList__list">
+          {Object.keys(this.props.cities).map(key => {
+            const city = this.props.cities[key];
+
+            return (
+              <City
+                key={key}
+                name={city.name}
+                id={key}
+                handleCityDelete={this.handleCityDelete}
+                handleCityChange={this.handleCityChange}
+                handleEditStart={this.handleEditStart}
+                handleEditSubmit={this.handleEditSubmit}
+                isEditing={this.state.isEditing}
+                cityNameInput={this.state.cityNameInput}
+              />
+            );
+          })}
+        </ul>
+      );
+    }
+
     if (this.props.hasErrored) {
-      return <p>Sorry! There was an error loading the items</p>;
+      return errorMessage;
     }
 
     if (this.props.isLoading) {
-      return <p>Loading</p>;
+      return loader;
     }
 
     const editingForm = (
@@ -66,6 +144,7 @@ class CityList extends Component {
         <label>
           Город:
           <input
+            required
             type="text"
             onChange={this.handleCityChange}
             value={this.state.cityNameInput}
@@ -88,25 +167,10 @@ class CityList extends Component {
             </div>
           </div>
 
-          <ul className="cityList cityList__list">
-            {Object.keys(this.props.cities).map(key => {
-              const city = this.props.cities[key];
+          {citiesList}
 
-              return (
-                <City
-                  key={key}
-                  name={city.name}
-                  id={key}
-                  handleCityDelete={this.handleCityDelete}
-                  handleCityChange={this.handleCityChange}
-                  handleEditStart={this.handleEditStart}
-                  handleEditSubmit={this.handleEditSubmit}
-                  isEditing={this.state.isEditing}
-                  cityNameInput={this.state.cityNameInput}
-                />
-              );
-            })}
-          </ul>
+          {this.state.uiLoading && loader}
+          {this.state.uiError && errorMessage}
           {this.state.isEditing && editingForm}
         </div>
       </div>
@@ -124,7 +188,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchData: url => dispatch(cityFetchData(url)),
+    fetchData: url => dispatch(citiesFetchData(url)),
     errorAfterFiveSeconds: () => dispatch(errorAfterFiveSeconds()),
     deleteCity: id => dispatch(deleteCity(id)),
     editCity: (id, city) => dispatch(editCity(id, city))

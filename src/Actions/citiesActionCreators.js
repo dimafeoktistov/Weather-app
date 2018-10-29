@@ -1,5 +1,6 @@
 import * as actions from "./actiontypes";
-import axiosFirebase from "../axios-firebase";
+import { axiosFirebase, axiosOWM } from "../axios-instances";
+import { APP_ID } from "../constants";
 
 export function editCity(id, city) {
   return {
@@ -19,8 +20,8 @@ export function deleteCity(id) {
 export function addCity(city) {
   return {
     type: actions.ADD_CITY,
-    id: city,
-    payload: { name: city }
+    id: city.id,
+    payload: { name: city.name }
   };
 }
 
@@ -45,7 +46,7 @@ export function citiesFetchDataSuccess(cities) {
   };
 }
 
-export function cityFetchData(url) {
+export function citiesFetchData(url) {
   return dispatch => {
     dispatch(citiesIsLoading(true));
 
@@ -57,8 +58,33 @@ export function cityFetchData(url) {
         }
         dispatch(citiesIsLoading(false));
         dispatch(citiesFetchDataSuccess(response.data));
+        if (response.data !== null) {
+          Object.keys(response.data).map(key => {
+            const cityName = response.data[key].name;
+            // dispatch(cityFetchData(cityName));
+            return cityName;
+          });
+        }
+
+        console.log(response.data);
       })
-      .catch(() => dispatch(citiesHasErrored(true)));
+      .catch(err => {
+        console.log(err);
+        dispatch(citiesHasErrored(true));
+      });
+  };
+}
+
+export function cityFetchData(cityName) {
+  return dispatch => {
+    console.log(cityName);
+    axiosOWM
+      .get(
+        `data/2.5/weather?q=${cityName}&APPID=${APP_ID}&lang=ru&units=metric`
+      )
+      .then(response => {
+        console.log(response);
+      });
   };
 }
 
