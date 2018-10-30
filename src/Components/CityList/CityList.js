@@ -6,9 +6,9 @@ import { axiosFirebase } from "../../axios-instances";
 import { connect } from "react-redux";
 import {
   citiesFetchData,
-  errorAfterFiveSeconds,
-  deleteCity,
-  editCity
+  cityFetchDataSuccess,
+  deleteCityFromFB,
+  cityPutData
 } from "../../Actions/citiesActionCreators";
 
 import City from "./City/City";
@@ -18,9 +18,7 @@ class CityList extends Component {
   state = {
     cityNameInput: "",
     id: null,
-    isEditing: false,
-    uiLoading: false,
-    uiError: false
+    isEditing: false
   };
 
   componentDidMount() {
@@ -28,27 +26,7 @@ class CityList extends Component {
   }
 
   handleCityDelete = e => {
-    this.setState({
-      ...this.state,
-      uiLoading: true
-    });
-    const cityId = e.target.id;
-    axiosFirebase
-      .delete(`/cities/${e.target.id}.json`)
-      .then(response => {
-        this.props.deleteCity(cityId);
-        this.setState({
-          ...this.state,
-          uiLoading: false
-        });
-        console.log(response);
-      })
-      .catch(err => {
-        this.setState({
-          ...this.state,
-          uiError: true
-        });
-      });
+    this.props.deleteCityFromFB(e.target.id);
   };
 
   handleCityChange = e => {
@@ -60,21 +38,12 @@ class CityList extends Component {
 
   handleEditSubmit = e => {
     e.preventDefault();
-    this.setState({ ...this.state, uiLoading: true });
 
-    //посылаем запрос к базе на изменение данных
-    const data = { name: this.state.cityNameInput };
-    const city = data;
-    axiosFirebase
-      .put(`/cities/${this.state.id}.json`, data)
-      .then(res => {
-        this.setState({ ...this.state, uiLoading: false });
-        this.props.editCity(this.state.id, city);
-        console.log(res);
-      })
-      .catch(err => console.log(err));
+    const city = {
+      name: this.state.cityNameInput
+    };
 
-    // отправка действия в редакс для изменения города
+    this.props.cityPutData(this.state.id, city);
 
     this.setState(prevState => {
       return {
@@ -131,11 +100,11 @@ class CityList extends Component {
       );
     }
 
-    if (this.props.hasErrored) {
+    if (this.props.citiesHasErrored) {
       return errorMessage;
     }
 
-    if (this.props.isLoading) {
+    if (this.props.citiesIsLoading) {
       return loader;
     }
 
@@ -160,17 +129,15 @@ class CityList extends Component {
           <div className="cityList__heading">
             <h2>Вы следите за следующими городами</h2>
             <div className="cityList__controls">
-              <button onClick={this.props.errorAfterFiveSeconds}>
-                Сортировать
-              </button>
+              <button>Сортировать</button>
               <AddCity />
             </div>
           </div>
 
           {citiesList}
 
-          {this.state.uiLoading && loader}
-          {this.state.uiError && errorMessage}
+          {this.props.cityIsLoading && loader}
+          {this.props.cityHasErrored && errorMessage}
           {this.state.isEditing && editingForm}
         </div>
       </div>
@@ -181,17 +148,19 @@ class CityList extends Component {
 const mapStateToProps = state => {
   return {
     cities: state.cities,
-    hasErrored: state.citiesHasErrored,
-    isLoading: state.citiesIsLoading
+    citiesHasErrored: state.citiesHasErrored,
+    citiesIsLoading: state.citiesIsLoading,
+    cityHasErrored: state.cityHasErrored,
+    cityIsLoading: state.cityIsLoading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    cityFetchDataSuccess: () => dispatch(cityFetchDataSuccess()),
     fetchData: url => dispatch(citiesFetchData(url)),
-    errorAfterFiveSeconds: () => dispatch(errorAfterFiveSeconds()),
-    deleteCity: id => dispatch(deleteCity(id)),
-    editCity: (id, city) => dispatch(editCity(id, city))
+    deleteCityFromFB: id => dispatch(deleteCityFromFB(id)),
+    cityPutData: (id, city) => dispatch(cityPutData(id, city))
   };
 };
 

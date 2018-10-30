@@ -5,5 +5,5 @@ export const axiosFirebase = axios.create({
 });
 
 export const axiosOWM = axios.create({
-  baseURL: "https://api.openweathermap.org/"
+  baseURL: "https://api.openweathermap.org/data/2.5/weather"
 });

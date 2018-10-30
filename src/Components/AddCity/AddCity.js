@@ -4,14 +4,10 @@ import { connect } from "react-redux";
 
 import { axiosFirebase } from "../../axios-instances";
 
-import { addCity } from "../../Actions/citiesActionCreators";
+import { cityPostData } from "../../Actions/citiesActionCreators";
 
 const mapDispatchToProps = dispatch => {
-  return {
-    addCity: city => {
-      dispatch(addCity(city));
-    }
-  };
+  return { cityPostData: city => dispatch(cityPostData(city)) };
 };
 
 class AddCity extends Component {
@@ -27,21 +23,23 @@ class AddCity extends Component {
 
   handleCitySubmit = event => {
     event.preventDefault();
-    // this.props.addCity(this.state.city);
+
     const data = {
       name: this.state.city
     };
 
-    axiosFirebase
-      .post(`cities.json`, data)
-      .then(response => {
-        const city = {
-          id: response.data.name,
-          name: data.name
-        };
-        this.props.addCity(city);
-      })
-      .catch(err => console.log(err));
+    this.props.cityPostData(this.state.city);
+
+    // axiosFirebase
+    //   .post(`cities.json`, data)
+    //   .then(response => {
+    //     const city = {
+    //       id: response.data.name,
+    //       name: data.name
+    //     };
+    //     this.props.addCity(city);
+    //   })
+    //   .catch(err => console.log(err));
     this.setState({ city: "" });
   };
 
