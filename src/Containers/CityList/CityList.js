@@ -22,11 +22,7 @@ class CityList extends Component {
     const { token, userId } = this.props;
     const queryParams =
       "?auth=" + token + '&orderBy="userId"&equalTo="' + userId + '"';
-    this.props.fetchData("cities.json" + queryParams);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.cities);
+    this.props.fetchData("cities.json" + queryParams, userId);
   }
 
   handleCityDelete = e => {
@@ -170,7 +166,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     cityFetchDataSuccess: () => dispatch(actions.cityFetchDataSuccess()),
-    fetchData: url => dispatch(actions.citiesFetchData(url)),
+    fetchData: (url, userId) => dispatch(actions.citiesFetchData(url, userId)),
     deleteCityFromFB: (id, token) =>
       dispatch(actions.deleteCityFromFB(id, token)),
     cityPutData: (id, city, token) =>

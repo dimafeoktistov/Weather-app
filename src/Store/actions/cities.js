@@ -23,7 +23,7 @@ export function citiesFetchDataSuccess(cities) {
   };
 }
 
-export function citiesFetchData(url) {
+export function citiesFetchData(url, userId) {
   return dispatch => {
     dispatch(citiesIsLoading(true));
 
@@ -41,7 +41,7 @@ export function citiesFetchData(url) {
         if (response.data !== null) {
           Object.keys(response.data).map(key => {
             const cityName = response.data[key].name;
-            dispatch(cityFetchData(cityName, key));
+            dispatch(cityFetchData(cityName, key, userId));
             return cityName;
           });
         }

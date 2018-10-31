@@ -7,6 +7,8 @@ const City = ({
   humidity,
   weather,
   id,
+  pressure,
+  windSpeed,
   handleCityDelete,
   handleEditStart
 }) => {
@@ -30,8 +32,8 @@ const City = ({
 
       <p>
         Температура: {temp} C; Влажность: {humidity}
-        %; Погодные условия - {weather}
-        ,.
+        %; Погодные условия - {weather}; Давление - {pressure} мм. ртутного
+        столба. Скорость ветра - {windSpeed} м/c.
       </p>
     </li>
   );

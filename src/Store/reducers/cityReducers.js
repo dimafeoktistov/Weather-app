@@ -47,13 +47,12 @@ export function cities(state = {}, action) {
       };
 
     case actions.CITY_FETCH_DATA_SUCCESS:
-      return Object.keys(state).reduce((object, key) => {
-        if (key === action.key) {
-          state[key] = city(state[key], action);
+      return {
+        ...state,
+        [action.key]: {
+          ...action.payload
         }
-
-        return state;
-      }, {});
+      };
 
     default:
       return state;
@@ -102,3 +101,12 @@ export function cityHasErrored(state = false, action) {
       return state;
   }
 }
+
+// Object.keys(state).reduce((object, key) => {
+//   if (key === action.key) {
+//     state[key] = city(state[key], action);
+//     object[key] = state[key];
+//   }
+
+//   return object;
+// }, {});

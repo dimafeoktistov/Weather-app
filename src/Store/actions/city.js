@@ -73,6 +73,8 @@ export function cityPostData(cityName, token, userId) {
       .then(response => {
         const { coord, main, wind, weather } = response.data;
         const weatherData = {
+          name: cityName,
+          userId,
           coordinates: coord,
           temp: main.temp,
           humidity: main.humidity,
@@ -122,7 +124,7 @@ export function cityPutData(id, city, token) {
   };
 }
 
-export function cityFetchData(cityName, key) {
+export function cityFetchData(cityName, key, userId) {
   return dispatch => {
     dispatch(cityIsLoading(true));
     axiosOWM
@@ -130,6 +132,8 @@ export function cityFetchData(cityName, key) {
       .then(response => {
         const { coord, main, wind, weather } = response.data;
         const data = {
+          name: cityName,
+          userId,
           coordinates: coord,
           temp: main.temp,
           humidity: main.humidity,
