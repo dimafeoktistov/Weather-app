@@ -33,6 +33,10 @@ export function citiesFetchData(url) {
         if (response.statusText !== "OK") {
           throw Error(response.statusText);
         }
+        const fetchedCities = [];
+        for (let key in response.data) {
+          fetchedCities.push({ ...response.data[key], id: key });
+        }
         dispatch(citiesFetchDataSuccess(response.data));
         if (response.data !== null) {
           Object.keys(response.data).map(key => {

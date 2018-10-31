@@ -80,7 +80,6 @@ export function cityPostData(cityName, token, userId) {
           windSpeed: wind.speed,
           weather: weather[0].description
         };
-        dispatch(cityFetchDataSuccess(weatherData));
 
         const data = {
           name: cityName,
@@ -89,7 +88,7 @@ export function cityPostData(cityName, token, userId) {
 
         console.log(postingUserId, userToken);
 
-        postCityToFB(data, userToken, dispatch);
+        postCityToFB(data, userToken, dispatch, weatherData);
         dispatch(cityHasErrored(false));
       })
       .catch(() => {
@@ -147,7 +146,7 @@ export function cityFetchData(cityName, key) {
   };
 }
 
-function postCityToFB(data, token, dispatch) {
+function postCityToFB(data, token, dispatch, weatherData) {
   axiosFirebase
     .post(`cities.json?auth=${token}`, data)
     .then(response => {
@@ -156,6 +155,7 @@ function postCityToFB(data, token, dispatch) {
         name: data.name
       };
       dispatch(addCity(city));
+      dispatch(cityFetchDataSuccess(weatherData, city.id));
     })
     .catch(err => console.log(err));
 }

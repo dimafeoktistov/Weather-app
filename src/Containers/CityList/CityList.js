@@ -14,7 +14,8 @@ class CityList extends Component {
   state = {
     cityNameInput: "",
     id: null,
-    isEditing: false
+    isEditing: false,
+    opt: null
   };
 
   componentDidMount() {
@@ -83,8 +84,6 @@ class CityList extends Component {
         <ul className="cityList cityList__list">
           {Object.keys(this.props.cities).map(key => {
             const city = this.props.cities[key];
-
-            console.log(this.props.cities[key]);
 
             return (
               <City
