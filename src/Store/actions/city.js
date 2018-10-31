@@ -99,13 +99,15 @@ export function cityPostData(cityName, token, userId) {
   };
 }
 
-export function cityPutData(id, city, token) {
+export function cityPutData(id, city, token, userId) {
   return dispatch => {
     axiosOWM
       .get(`?q=${city.name}&APPID=${APP_ID}&lang=ru&units=metric`)
       .then(response => {
         const { coord, main, wind, weather } = response.data;
         const weatherData = {
+          name: city.name,
+          userId,
           coordinates: coord,
           temp: main.temp,
           humidity: main.humidity,
@@ -167,6 +169,5 @@ function postCityToFB(data, token, dispatch, weatherData) {
 function putCityToFB(id, city, dispatch, token) {
   axiosFirebase
     .put(`/cities/${id}.json?auth=${token}`, city)
-    .then(() => {})
     .catch(() => dispatch(cityHasErrored(true)));
 }

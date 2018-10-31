@@ -43,7 +43,12 @@ class CityList extends Component {
       name: this.state.cityNameInput
     };
 
-    this.props.cityPutData(this.state.id, city, this.props.token);
+    this.props.cityPutData(
+      this.state.id,
+      city,
+      this.props.token,
+      this.props.userId
+    );
 
     this.setState(prevState => {
       return {
@@ -169,8 +174,8 @@ const mapDispatchToProps = dispatch => {
     fetchData: (url, userId) => dispatch(actions.citiesFetchData(url, userId)),
     deleteCityFromFB: (id, token) =>
       dispatch(actions.deleteCityFromFB(id, token)),
-    cityPutData: (id, city, token) =>
-      dispatch(actions.cityPutData(id, city, token))
+    cityPutData: (id, city, token, userId) =>
+      dispatch(actions.cityPutData(id, city, token, userId))
   };
 };
 
