@@ -1,18 +1,14 @@
 import React, { Component } from "react";
 import "./CityList.scss";
 
-import { axiosFirebase } from "../../axios-instances";
+// import { axiosFirebase } from "../../axios-instances";
 
 import { connect } from "react-redux";
-import {
-  citiesFetchData,
-  cityFetchDataSuccess,
-  deleteCityFromFB,
-  cityPutData
-} from "../../Actions/citiesActionCreators";
+import * as actions from "../../Store/actions";
 
 import City from "./City/City";
 import AddCity from "../AddCity/AddCity";
+import Spinner from "../../Components/UI/Spinner/Spinner";
 
 class CityList extends Component {
   state = {
@@ -22,11 +18,18 @@ class CityList extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchData("cities.json");
+    const { token, userId } = this.props;
+    const queryParams =
+      "?auth=" + token + '&orderBy="userId"&equalTo="' + userId + '"';
+    this.props.fetchData("cities.json" + queryParams);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.cities);
   }
 
   handleCityDelete = e => {
-    this.props.deleteCityFromFB(e.target.id);
+    this.props.deleteCityFromFB(e.target.id, this.props.token);
   };
 
   handleCityChange = e => {
@@ -43,7 +46,7 @@ class CityList extends Component {
       name: this.state.cityNameInput
     };
 
-    this.props.cityPutData(this.state.id, city);
+    this.props.cityPutData(this.state.id, city, this.props.token);
 
     this.setState(prevState => {
       return {
@@ -66,7 +69,6 @@ class CityList extends Component {
   };
 
   render() {
-    const loader = <p>Загрузка данных</p>;
     const errorMessage = <p> При запросе к серверу произошла ошибка. </p>;
     let citiesList;
 
@@ -82,16 +84,22 @@ class CityList extends Component {
           {Object.keys(this.props.cities).map(key => {
             const city = this.props.cities[key];
 
+            console.log(this.props.cities[key]);
+
             return (
               <City
                 key={key}
                 name={city.name}
+                temp={city.temp}
+                humidity={city.humidity}
+                pressure={city.pressure}
+                windSpeed={city.windSpeed}
+                weather={city.weather}
                 id={key}
                 handleCityDelete={this.handleCityDelete}
                 handleCityChange={this.handleCityChange}
                 handleEditStart={this.handleEditStart}
                 handleEditSubmit={this.handleEditSubmit}
-                isEditing={this.state.isEditing}
                 cityNameInput={this.state.cityNameInput}
               />
             );
@@ -105,7 +113,11 @@ class CityList extends Component {
     }
 
     if (this.props.citiesIsLoading) {
-      return loader;
+      return <Spinner />;
+    }
+
+    if (this.props.cityIsLoading) {
+      return <Spinner />;
     }
 
     const editingForm = (
@@ -136,7 +148,6 @@ class CityList extends Component {
 
           {citiesList}
 
-          {this.props.cityIsLoading && loader}
           {this.props.cityHasErrored && errorMessage}
           {this.state.isEditing && editingForm}
         </div>
@@ -151,16 +162,20 @@ const mapStateToProps = state => {
     citiesHasErrored: state.citiesHasErrored,
     citiesIsLoading: state.citiesIsLoading,
     cityHasErrored: state.cityHasErrored,
-    cityIsLoading: state.cityIsLoading
+    cityIsLoading: state.cityIsLoading,
+    token: state.auth.token,
+    userId: state.auth.userId
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    cityFetchDataSuccess: () => dispatch(cityFetchDataSuccess()),
-    fetchData: url => dispatch(citiesFetchData(url)),
-    deleteCityFromFB: id => dispatch(deleteCityFromFB(id)),
-    cityPutData: (id, city) => dispatch(cityPutData(id, city))
+    cityFetchDataSuccess: () => dispatch(actions.cityFetchDataSuccess()),
+    fetchData: url => dispatch(actions.citiesFetchData(url)),
+    deleteCityFromFB: (id, token) =>
+      dispatch(actions.deleteCityFromFB(id, token)),
+    cityPutData: (id, city, token) =>
+      dispatch(actions.cityPutData(id, city, token))
   };
 };
 
@@ -168,8 +183,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(CityList);
-
-// cityName = { city.name }
-// temp = { city.main.temp }
-// humidity = { city.main.humidity }
-// description = { city.weather[0].description }

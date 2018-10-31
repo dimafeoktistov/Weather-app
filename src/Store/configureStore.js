@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
-import rootReducer from "../Reducers";
-// import formValidationMiddleware from "../CustomMiddleware/formValidationMiddleware";
+import rootReducer from "./reducers";
 
 export default function configureStore(initialState) {
   return createStore(

@@ -5,7 +5,7 @@ const City = ({
   name,
   temp,
   humidity,
-  description,
+  weather,
   id,
   handleCityDelete,
   handleEditStart
@@ -30,7 +30,8 @@ const City = ({
 
       <p>
         Температура: {temp} C; Влажность: {humidity}
-        %; Облачность - {description}.
+        %; Погодные условия - {weather}
+        ,.
       </p>
     </li>
   );

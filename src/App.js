@@ -1,60 +1,59 @@
 import React, { Component } from "react";
 import "./App.scss";
 
-import CityList from "./Components/CityList/CityList";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+
+import CityList from "./Containers/CityList/CityList";
 import Layout from "./HOCs/Layout/Layout";
+import Auth from "./Containers/Auth/Auth";
+import Logout from "./Containers/Auth/Logout/Logout";
+import * as actions from "./Store/actions/index";
 
 class App extends Component {
-  // state = {
-  //   query: "",
-  //   cities: []
-  // };
-
   componentDidMount = () => {
-    // fetch(
-    //   `http://api.openweathermap.org/data/2.5/weather?q=Tomsk&APPID=${APPID}&lang=ru&units=metric`
-    // )
-    //   .then(res => res.json())
-    //   .then(weather => console.log(weather));
-  };
-
-  // handleCityInput = event => {
-  //   this.setState({
-  //     ...this.state,
-  //     query: event.target.value
-  //   });
-  // };
-
-  handleCitySubmit = event => {
-    // let city = this.state.query;
-    // console.log(city);
-
-    // fetch(
-    //   `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${APPID}&lang=ru&units=metric`
-    // )
-    //   .then(res => res.json())
-    //   .then(city =>
-    //     this.setState(prevState => ({
-    //       query: "",
-    //       cities: [...prevState.cities, city]
-    //     }))
-    //   );
-
-    event.preventDefault();
+    this.props.onTryAutoSignup();
   };
 
   render() {
-    return (
-      <Layout>
-        <CityList />
-      </Layout>
+    let routes = (
+      <Switch>
+        <Route path="/auth" component={Auth} />
+        <Route path="/" exact component={Auth} />
+        <Redirect to="/" />
+      </Switch>
     );
+
+    if (this.props.isAuthenticated) {
+      routes = (
+        <Switch>
+          <Route path="/list" component={CityList} />
+          <Route path="/logout" component={Logout} />
+          <Route path="/" exact component={CityList} />
+          <Redirect to="/" />
+        </Switch>
+      );
+    }
+
+    return <Layout>{routes}</Layout>;
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.auth.token !== null
+  };
+};
 
-// handleCityInput = { this.handleCityInput }
-// handleCitySubmit = { this.handleCitySubmit }
-// city = { this.state.query }
-// cities = { this.state.cities }
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryAutoSignup: () => dispatch(actions.authCheckState())
+  };
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(App)
+);
