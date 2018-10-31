@@ -1,4 +1,4 @@
-import * as actions from "../Actions/actiontypes";
+import * as actions from "../actions/actiontypes";
 
 function removeProperty(obj, property) {
   return Object.keys(obj).reduce((object, key) => {
@@ -8,22 +8,6 @@ function removeProperty(obj, property) {
     return object;
   }, {});
 }
-
-// function updateProperty(obj, property, callback) {
-//   return Object.keys(obj).reduce((object, key) => {
-//     if (key !== property) {
-//       object[key] = callback;
-//     }
-//     return object;
-//   }, {});
-// }
-
-// function updateAllProperties(obj) {
-//   return Object.keys(obj).reduce((object, key) => {
-//     object[key] = obj[key];
-//     return object;
-//   }, {});
-// }
 
 export function citiesHasErrored(state = false, action) {
   switch (action.type) {
@@ -64,9 +48,11 @@ export function cities(state = {}, action) {
 
     case actions.CITY_FETCH_DATA_SUCCESS:
       return Object.keys(state).reduce((object, key) => {
-        const item = state[key];
-        object[key] = city(item, action);
-        return object;
+        if (key === action.key) {
+          state[key] = city(state[key], action);
+        }
+
+        return state;
       }, {});
 
     default:
@@ -79,7 +65,7 @@ export function city(state, action) {
     case actions.CITY_FETCH_DATA_SUCCESS:
       return {
         ...state,
-        weatherData: action.payload
+        ...action.payload
       };
 
     default:

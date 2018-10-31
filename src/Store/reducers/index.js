@@ -7,10 +7,13 @@ import {
   cityHasErrored
 } from "./cityReducers";
 
+import authReducer from "./auth";
+
 export default combineReducers({
   cities,
   citiesHasErrored,
   citiesIsLoading,
   cityIsLoading,
-  cityHasErrored
+  cityHasErrored,
+  auth: authReducer
 });
