@@ -15,12 +15,7 @@ function Header(props) {
   if (props.isAuthenticated) {
     navigationLinks = (
       <div className="navigationLinks">
-        <p>
-          <Link to="/logout">Выйти</Link>
-        </p>
-        <p>
-          <Link to="/">Города</Link>
-        </p>
+        <Link to="/logout">Выйти</Link>
       </div>
     );
   }
