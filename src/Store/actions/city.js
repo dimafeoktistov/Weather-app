@@ -96,6 +96,9 @@ export function cityPostData(cityName, token, userId) {
       .catch(() => {
         dispatch(cityIsLoading(false));
         dispatch(cityHasErrored(true));
+        const clearError = () => dispatch(cityHasErrored(false));
+
+        setTimeout(clearError, 2000);
       });
   };
 }
@@ -130,7 +133,7 @@ export function cityPutData(id, city, token, userId) {
 
         const clearError = () => dispatch(cityHasErrored(false));
 
-        setTimeout(clearError, 3000);
+        setTimeout(clearError, 2000);
       });
   };
 }

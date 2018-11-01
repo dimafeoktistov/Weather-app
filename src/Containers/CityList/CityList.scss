@@ -1,37 +1,65 @@
 h2 {
-  text-align: center;
+    text-align: center;
 }
 
 .cityList {
-  &__list {
-    margin-top: 0;
-    list-style: none;
-    padding: 0;
-    @media screen and (min-width: 800px) {
-      width: 70%;
+    &__list {
+        margin-top: 0;
+        list-style: none;
+        padding: 0;
+        @media screen and (min-width: 800px) {
+            width: 70%;
+        }
     }
-  }
-  &__controls {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    @media screen and (min-width: 800px) {
-      width: 30%;
+    &__controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        @media screen and (min-width: 800px) {
+            width: 30%;
+        }
     }
-  }
-  &__container {
-    display: flex;
-    flex-direction: column;
-    @media screen and (min-width: 800px) {
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
+    &__container {
+        display: flex;
+        flex-direction: column;
+        @media screen and (min-width: 800px) {
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
     }
-  }
 }
 
 .sortBtn {
-  margin: 0;
-  width: 90%;
+    margin: 0;
+    width: 90%;
 }
+
+.Input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.Label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.InputElement {
+    outline: none;
+    border: 1px solid #ccc;
+    background-color: white;
+    font: inherit;
+    padding: 6px 10px;
+    display: block;
+    width: 100%;
+ box-sizing: border-box;
+ }
+
+ .InputElement:focus {
+     outline: none;
+     background-color: #ccc;
+ }

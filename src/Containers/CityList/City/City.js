@@ -1,5 +1,6 @@
 import React from "react";
 import "./City.scss";
+import Button from "../../../Components/UI/Button/Button";
 
 const City = ({
   name,
@@ -17,16 +18,20 @@ const City = ({
       <div className="city__entry__heading">
         <h3>{name}</h3>
         <div className="city__entry__controls">
-          <button
-            className="city__deleteBtn"
+          <Button
+            clicked={handleCityDelete}
+            btnType="city__deleteBtn Danger"
             id={id}
-            onClick={handleCityDelete}
           >
-            X
-          </button>
-          <button className="city__editBtn" id={id} onClick={handleEditStart}>
-            редактировать
-          </button>
+            УДАЛИТЬ
+          </Button>
+          <Button
+            clicked={handleEditStart}
+            btnType="city__editBtn Success"
+            id={id}
+          >
+            РЕДАКТИРОВАТЬ
+          </Button>
         </div>
       </div>
 

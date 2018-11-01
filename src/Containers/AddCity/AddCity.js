@@ -18,7 +18,8 @@ const mapStateToProps = state => {
   return {
     token: state.auth.token,
     userId: state.auth.userId,
-    isLoading: state.cityIsLoading
+    isLoading: state.cityIsLoading,
+    cityHasErrored: state.cityHasErrored
   };
 };
 
@@ -115,6 +116,7 @@ class AddCity extends Component {
   };
 
   render() {
+    const errorMessage = <p> Город не найден. </p>;
     const formElementsArray = [];
     for (let key in this.state.controls) {
       formElementsArray.push({ id: key, config: this.state.controls[key] });
@@ -138,6 +140,7 @@ class AddCity extends Component {
       <form className="AddCity" onSubmit={this.submitHandler}>
         {form}
         <Button btnType="Success">ПОЛУЧИТЬ ДАННЫЕ О ПОГОДЕ</Button>
+        {this.props.cityHasErrored && errorMessage}
       </form>
     );
   }

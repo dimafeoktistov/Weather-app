@@ -10,6 +10,7 @@ import City from "./City/City";
 import AddCity from "../AddCity/AddCity";
 import Spinner from "../../Components/UI/Spinner/Spinner";
 import Button from "../../Components/UI/Button/Button";
+import Modal from "../../Components/UI/Modal/Modal";
 
 class CityList extends Component {
   state = {
@@ -52,13 +53,15 @@ class CityList extends Component {
       this.props.userId
     );
 
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        cityNameInput: "",
-        isEditing: !prevState.isEditing
-      };
-    });
+    if (this.props.cityHasErrored) {
+      this.setState(prevState => {
+        return {
+          ...prevState,
+          cityNameInput: "",
+          isEditing: !prevState.isEditing
+        };
+      });
+    }
   };
 
   handleEditStart = e => {
@@ -69,6 +72,13 @@ class CityList extends Component {
         id,
         isEditing: !prevState.isEditing
       };
+    });
+  };
+
+  cancelEditing = () => {
+    this.setState({
+      ...this.state,
+      isEditing: false
     });
   };
 
@@ -84,6 +94,7 @@ class CityList extends Component {
 
   render() {
     const errorMessage = <p> Город не найден. </p>;
+    const citiesErrorMessage = <p> Не удалось получить данные с сервера. </p>;
     let citiesList;
 
     if (
@@ -123,7 +134,7 @@ class CityList extends Component {
     }
 
     if (this.props.citiesHasErrored) {
-      return errorMessage;
+      return citiesErrorMessage;
     }
 
     if (this.props.citiesIsLoading) {
@@ -136,16 +147,23 @@ class CityList extends Component {
 
     const editingForm = (
       <form onSubmit={this.handleEditSubmit}>
-        <label>
-          Город:
+        <label className="Label">
+          Введите название города на который вы хотите изменить:
           <input
             required
+            placeholder="Город"
             type="text"
             onChange={this.handleCityChange}
             value={this.state.cityNameInput}
+            className="Input"
           />
         </label>
-        <Button btnType="Success">ИЗМЕНИТЬ ГОРОД</Button>
+        <Button btnType="Success" type="submit">
+          ИЗМЕНИТЬ ГОРОД
+        </Button>
+        <Button btnType="Danger" clicked={this.cancelEditing}>
+          ОТМЕНИТЬ
+        </Button>
       </form>
     );
 
@@ -163,9 +181,12 @@ class CityList extends Component {
             </div>
             {citiesList}
           </div>
-          {this.props.cityHasErrored && errorMessage}
-          {this.state.isEditing && editingForm}
         </div>
+
+        <Modal show={this.state.isEditing} modalClosed={this.cancelEditing}>
+          {editingForm}
+          {this.props.cityHasErrored && errorMessage}
+        </Modal>
       </React.Fragment>
     );
   }
