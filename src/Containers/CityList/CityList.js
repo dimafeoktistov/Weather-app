@@ -9,13 +9,14 @@ import * as actions from "../../Store/actions";
 import City from "./City/City";
 import AddCity from "../AddCity/AddCity";
 import Spinner from "../../Components/UI/Spinner/Spinner";
+import Button from "../../Components/UI/Button/Button";
 
 class CityList extends Component {
   state = {
     cityNameInput: "",
     id: null,
     isEditing: false,
-    opt: null
+    sort: true
   };
 
   componentDidMount() {
@@ -40,7 +41,8 @@ class CityList extends Component {
     e.preventDefault();
 
     const city = {
-      name: this.state.cityNameInput
+      name: this.state.cityNameInput,
+      userId: this.props.userId
     };
 
     this.props.cityPutData(
@@ -70,8 +72,18 @@ class CityList extends Component {
     });
   };
 
+  handleSort = () => {
+    this.props.sortCitiesByTemp(this.state.sort);
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        sort: !prevState.sort
+      };
+    });
+  };
+
   render() {
-    const errorMessage = <p> При запросе к серверу произошла ошибка. </p>;
+    const errorMessage = <p> Город не найден. </p>;
     let citiesList;
 
     if (
@@ -79,7 +91,9 @@ class CityList extends Component {
       (Object.keys(this.props.cities).length === 0 &&
         this.props.cities.constructor === Object)
     ) {
-      citiesList = <p>Вы не добавили ни одного города</p>;
+      citiesList = (
+        <p className="cityList__none">Вы не добавили ни одного города</p>
+      );
     } else {
       citiesList = (
         <ul className="cityList cityList__list">
@@ -131,27 +145,28 @@ class CityList extends Component {
             value={this.state.cityNameInput}
           />
         </label>
-        <input type="submit" value="Submit" />
+        <Button btnType="Success">ИЗМЕНИТЬ ГОРОД</Button>
       </form>
     );
 
     return (
-      <div>
+      <React.Fragment>
         <div className="container">
-          <div className="cityList__heading">
-            <h2>Вы следите за следующими городами</h2>
+          <h2>Вы следите за следующими городами:</h2>
+          <div className="cityList__container">
             <div className="cityList__controls">
-              <button>Сортировать</button>
+              <Button clicked={this.handleSort} btnType="Danger sortBtn">
+                СОРТИРОВАТЬ
+              </Button>
+
               <AddCity />
             </div>
+            {citiesList}
           </div>
-
-          {citiesList}
-
           {this.props.cityHasErrored && errorMessage}
           {this.state.isEditing && editingForm}
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
@@ -175,7 +190,8 @@ const mapDispatchToProps = dispatch => {
     deleteCityFromFB: (id, token) =>
       dispatch(actions.deleteCityFromFB(id, token)),
     cityPutData: (id, city, token, userId) =>
-      dispatch(actions.cityPutData(id, city, token, userId))
+      dispatch(actions.cityPutData(id, city, token, userId)),
+    sortCitiesByTemp: way => dispatch(actions.sortCitiesByTemp(way))
   };
 };
 

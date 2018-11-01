@@ -1,5 +1,4 @@
 import * as actions from "./actiontypes";
-import { citiesIsLoading } from "./cities";
 import { axiosFirebase, axiosOWM } from "../../axios-instances";
 import { APP_ID } from "../../constants";
 
@@ -68,6 +67,8 @@ export function cityPostData(cityName, token, userId) {
     let userToken = token;
     let postingUserId = userId;
 
+    dispatch(cityIsLoading(true));
+
     axiosOWM
       .get(`?q=${cityName}&APPID=${APP_ID}&lang=ru&units=metric`)
       .then(response => {
@@ -88,12 +89,12 @@ export function cityPostData(cityName, token, userId) {
           userId: postingUserId
         };
 
-        console.log(postingUserId, userToken);
-
         postCityToFB(data, userToken, dispatch, weatherData);
+        dispatch(cityIsLoading(false));
         dispatch(cityHasErrored(false));
       })
       .catch(() => {
+        dispatch(cityIsLoading(false));
         dispatch(cityHasErrored(true));
       });
   };
@@ -101,6 +102,7 @@ export function cityPostData(cityName, token, userId) {
 
 export function cityPutData(id, city, token, userId) {
   return dispatch => {
+    dispatch(cityIsLoading(true));
     axiosOWM
       .get(`?q=${city.name}&APPID=${APP_ID}&lang=ru&units=metric`)
       .then(response => {
@@ -118,10 +120,17 @@ export function cityPutData(id, city, token, userId) {
         dispatch(editCity(id, city));
         dispatch(cityFetchDataSuccess(weatherData, id));
         putCityToFB(id, city, dispatch, token);
+        dispatch(cityIsLoading(false));
         dispatch(cityHasErrored(false));
       })
-      .catch(() => {
+      .catch(err => {
+        console.log(err);
+        dispatch(cityIsLoading(false));
         dispatch(cityHasErrored(true));
+
+        const clearError = () => dispatch(cityHasErrored(false));
+
+        setTimeout(clearError, 3000);
       });
   };
 }
@@ -167,6 +176,7 @@ function postCityToFB(data, token, dispatch, weatherData) {
 }
 
 function putCityToFB(id, city, dispatch, token) {
+  console.log(city);
   axiosFirebase
     .put(`/cities/${id}.json?auth=${token}`, city)
     .catch(() => dispatch(cityHasErrored(true)));

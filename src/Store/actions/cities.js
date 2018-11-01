@@ -53,3 +53,10 @@ export function citiesFetchData(url, userId) {
       });
   };
 }
+
+export function sortCitiesByTemp(bool) {
+  return {
+    type: actions.SORT_CITIES_BY_TEMP,
+    payload: bool
+  };
+}

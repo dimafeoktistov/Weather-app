@@ -143,17 +143,34 @@ class Auth extends Component {
     }
 
     return (
-      <div className="Auth">
-        {authRedirect}
-        {errorMessage}
-        <form onSubmit={this.submitHandler}>
-          {form}
-          <Button btnType="Success">ОТПРАВИТЬ</Button>
-        </form>
-        <Button clicked={this.switchAuthModeHandler} btnType="Danger">
-          ПЕРЕКЛЮЧИТСЯ НА {this.state.isSignup ? "ЛОГИН" : "РЕГИСТРАЦИЮ"}
-        </Button>
-      </div>
+      <React.Fragment>
+        <h2 className="Auth__heading">
+          Для просмотра данных о погоде в городах и добавления городов в свой
+          список вам необходимо зарегестрироваться или зайти под своим логином
+        </h2>
+        <div className="Auth">
+          {authRedirect}
+          {errorMessage}
+          <form onSubmit={this.submitHandler}>
+            {form}
+            <Button btnType="Success">ОТПРАВИТЬ</Button>
+          </form>
+          <Button clicked={this.switchAuthModeHandler} btnType="Danger">
+            ПЕРЕКЛЮЧИТСЯ НА {this.state.isSignup ? "ЛОГИН" : "РЕГИСТРАЦИЮ"}
+          </Button>
+        </div>
+
+        <h3 className="Auth__footer">
+          Все данные о погоде предоставлены сайтом{" "}
+          <a
+            href="http://openweathermap.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Openweathermap.com
+          </a>
+        </h3>
+      </React.Fragment>
     );
   }
 }

@@ -28,7 +28,8 @@ class AddCity extends Component {
       city: {
         elementType: "input",
         elementConfig: {
-          placeholder: "Город"
+          placeholder: "Город",
+          label: "Введите название города:"
         },
         value: "",
         validation: {
@@ -43,7 +44,7 @@ class AddCity extends Component {
   };
 
   checkValidity(value, rules) {
-    let isValid = true;
+    let isValid = false;
     if (!rules) {
       return true;
     }
@@ -122,6 +123,7 @@ class AddCity extends Component {
     let form = formElementsArray.map(formElement => (
       <Input
         key={formElement.id}
+        label={formElement.config.elementConfig.label}
         elementType={formElement.config.elementType}
         elementConfig={formElement.config.elementConfig}
         value={formElement.config.value}
@@ -133,9 +135,9 @@ class AddCity extends Component {
     ));
 
     return (
-      <form onSubmit={this.submitHandler}>
+      <form className="AddCity" onSubmit={this.submitHandler}>
         {form}
-        <Button btnType="Success">ОТПРАВИТЬ</Button>
+        <Button btnType="Success">ПОЛУЧИТЬ ДАННЫЕ О ПОГОДЕ</Button>
       </form>
     );
   }

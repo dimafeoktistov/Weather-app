@@ -54,6 +54,20 @@ export function cities(state = {}, action) {
         }
       };
 
+    case actions.SORT_CITIES_BY_TEMP:
+      return Object.keys(state)
+        .sort((a, b) => {
+          if (action.payload) {
+            return state[a].temp - state[b].temp;
+          } else {
+            return state[b].temp - state[a].temp;
+          }
+        })
+        .reduce((o, v) => {
+          o[v] = state[v];
+          return o;
+        }, {});
+
     default:
       return state;
   }
@@ -101,12 +115,3 @@ export function cityHasErrored(state = false, action) {
       return state;
   }
 }
-
-// Object.keys(state).reduce((object, key) => {
-//   if (key === action.key) {
-//     state[key] = city(state[key], action);
-//     object[key] = state[key];
-//   }
-
-//   return object;
-// }, {});

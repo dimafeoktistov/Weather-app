@@ -1,15 +1,37 @@
+h2 {
+  text-align: center;
+}
+
 .cityList {
-    &__heading {
-        display: flex;
-        align-items: center;
+  &__list {
+    margin-top: 0;
+    list-style: none;
+    padding: 0;
+    @media screen and (min-width: 800px) {
+      width: 70%;
     }
-    &__list {
-        list-style: none;
-        padding: 0;
+  }
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    @media screen and (min-width: 800px) {
+      width: 30%;
     }
-    &__controls {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
+  }
+  &__container {
+    display: flex;
+    flex-direction: column;
+    @media screen and (min-width: 800px) {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
     }
+  }
+}
+
+.sortBtn {
+  margin: 0;
+  width: 90%;
 }

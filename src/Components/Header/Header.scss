@@ -1,7 +1,41 @@
 .App-header {
   background-color: #282c34;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   font-size: calc(10px + 2vmin);
   color: #61dafb;
+  a {
+    list-style: none;
+    color: #61dafb;
+    text-decoration: none;
+    font-size: calc(5px + 2vmin);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__content {
+    width: 80%;
+    margin: 0 auto;
+    h1 {
+      margin: 0;
+    }
+  }
+}
+
+.navigationLinks {
+  margin-left: auto;
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  a {
+    margin-right: 10px;
+    &:hover {
+      color: rgb(6, 248, 208);
+    }
+  }
 }

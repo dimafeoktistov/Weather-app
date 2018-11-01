@@ -6,4 +6,4 @@ export {
   cityFetchData,
   cityFetchDataSuccess
 } from "./city";
-export { citiesFetchData } from "./cities";
+export { citiesFetchData, sortCitiesByTemp } from "./cities";
