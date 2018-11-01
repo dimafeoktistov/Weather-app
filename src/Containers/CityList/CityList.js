@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import "./CityList.scss";
 
-// import { axiosFirebase } from "../../axios-instances";
-
 import { connect } from "react-redux";
 import * as actions from "../../Store/actions";
 
@@ -53,15 +51,11 @@ class CityList extends Component {
       this.props.userId
     );
 
-    if (this.props.cityHasErrored) {
-      this.setState(prevState => {
-        return {
-          ...prevState,
-          cityNameInput: "",
-          isEditing: !prevState.isEditing
-        };
-      });
-    }
+    this.setState({
+      ...this.state,
+      cityNameInput: "",
+      isEditing: false
+    });
   };
 
   handleEditStart = e => {
@@ -146,25 +140,27 @@ class CityList extends Component {
     }
 
     const editingForm = (
-      <form onSubmit={this.handleEditSubmit}>
-        <label className="Label">
-          Введите название города на который вы хотите изменить:
-          <input
-            required
-            placeholder="Город"
-            type="text"
-            onChange={this.handleCityChange}
-            value={this.state.cityNameInput}
-            className="Input"
-          />
-        </label>
-        <Button btnType="Success" type="submit">
-          ИЗМЕНИТЬ ГОРОД
-        </Button>
+      <React.Fragment>
+        <form onSubmit={this.handleEditSubmit}>
+          <label className="Label">
+            Введите название города на который вы хотите изменить:
+            <input
+              required
+              placeholder="Город"
+              type="text"
+              onChange={this.handleCityChange}
+              value={this.state.cityNameInput}
+              className="Input"
+            />
+          </label>
+          <Button btnType="Success" type="submit">
+            ИЗМЕНИТЬ ГОРОД
+          </Button>
+        </form>
         <Button btnType="Danger" clicked={this.cancelEditing}>
           ОТМЕНИТЬ
         </Button>
-      </form>
+      </React.Fragment>
     );
 
     return (
@@ -174,7 +170,7 @@ class CityList extends Component {
           <div className="cityList__container">
             <div className="cityList__controls">
               <Button clicked={this.handleSort} btnType="Danger sortBtn">
-                СОРТИРОВАТЬ
+                СОРТИРОВАТЬ ПО ТЕМПЕРАТУРЕ
               </Button>
 
               <AddCity />
